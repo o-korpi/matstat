@@ -8,6 +8,20 @@ def binomial_c(n, k):
 
 
 class DiscreteDistribution(Protocol):
+    def pmf(self, k: int) -> float:
+        ...
+
+    def plot(self) -> None:
+        ...
+
+
+class ContinuousDistribution(Protocol):
+    def pdf(self, k: int) -> float:
+        ...
+
+    def cdf(self, k: int) -> float:
+        ...
+
     def plot(self) -> None:
         ...
 
