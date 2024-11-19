@@ -41,6 +41,6 @@ if __name__ == "__main__":
     y = x.expected_value()
     print(y)
 
-    ffg = distributions.FFG(0.15)
-    ffg.plot()
+    ffg = distributions.GeometricDistribution(1/6)
+    ffg.plot(20)
 
