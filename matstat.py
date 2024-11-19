@@ -29,18 +29,15 @@ class StochVar:
         return out
 
 
+def even_distribution(size: int) -> StochVar:
+    events = []
+    for value in range(0, size):
+        events.append(Event(1 / size, value))
+
+    return StochVar(events)
+
+
 if __name__ == "__main__":
-
-
-    x = StochVar([
-        Event(0.2, 1),
-        Event(0.3, 2),
-        Event(0.3, 3)
-    ])
-
-    y = x.expected_value()
-    print(y)
-
-    ffg = distributions.GeometricDistribution(1/6)
-    ffg.plot(20)
+    ffg = distributions.Poisson(1)
+    ffg.plot(50)
 

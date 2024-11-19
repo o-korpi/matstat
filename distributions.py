@@ -1,6 +1,10 @@
-from math import factorial
+from math import factorial, exp
 from typing import Protocol
 import matplotlib.pyplot as plt
+
+
+def binomial(k, n):
+    return factorial(n) / (factorial(k) * factorial(n - k))
 
 
 class DiscreteDistribution(Protocol):
@@ -50,5 +54,27 @@ class Binomial(DiscreteDistribution):
     def plot(self, n: int = 25):
         x_axis = range(0, n)
         data = [self.px(x, n) for x in range(0, n)]
+        plt.bar(x_axis, data)
+        plt.show()
+
+
+# vet inte hur jag gör hypergeometrisk lol
+
+
+class Poisson(DiscreteDistribution):
+    def __init__(self, mu: float) -> None:
+        super().__init__()
+
+        if mu <= 0:
+            raise ValueError("mu must be positive")
+
+        self.mu = mu
+
+    def px(self, k: int, mu: float) -> float:
+        return (pow(mu, k) / factorial(k)) * exp(-1 * mu)
+
+    def plot(self, n: int = 25):
+        x_axis = range(0, n)
+        data = [self.px(x, self.mu) for x in range(0, n)]
         plt.bar(x_axis, data)
         plt.show()
