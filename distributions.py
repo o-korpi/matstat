@@ -1,9 +1,13 @@
+from __future__ import annotations
+
 from math import factorial, exp
 from typing import Protocol
 import matplotlib.pyplot as plt
 
 
+
 def binomial_c(n, k):
+    """Binomial coefficient"""
     return factorial(n) / (factorial(k) * factorial(n - k))
 
 
@@ -16,14 +20,17 @@ class DiscreteDistribution(Protocol):
 
 
 class ContinuousDistribution(Protocol):
-    def pdf(self, k: int) -> float:
+    def pdf(self, k: float) -> float:
         ...
 
-    def cdf(self, k: int) -> float:
+    def cdf(self, k: float) -> float:
         ...
 
-    def plot(self) -> None:
-        ...
+    def plot(self, n: int = 25, sample_rate: int = 5) -> None:
+        x_axis = range(0, n * sample_rate)
+        data = [self.pdf(k / sample_rate) for k in x_axis]
+        plt.plot(x_axis, data)
+        plt.show()
 
 
 class FFG(DiscreteDistribution):
@@ -155,3 +162,42 @@ class Poisson(DiscreteDistribution):
 
     def variance(self) -> float:
         return self.mu
+
+    def to_exponential(self) -> ExponentialDistribution:
+        return ExponentialDistribution(1 / self.mu)
+
+
+class ExponentialDistribution(ContinuousDistribution):
+    """Exponential distribution
+
+    Time between events in a Poisson process (inverse of Poisson)
+
+    Requirements:
+    - The rate of which events occur must be constant
+    - Events must be independent
+    - Lambda (l) > 0
+
+
+    """
+    def __init__(self, l: float) -> None:
+        super().__init__()
+
+        if l <= 0:
+            raise ValueError("Lambda (l) must be positive")
+
+        self.l = l
+
+    def pdf(self, k: float) -> float:
+        if k < 0:
+            return 0
+        else:
+            return self.l * exp((-1 * self.l) * k)
+
+    def cdf(self, k: float) -> float:
+        if k < 0:
+            return 0
+        else:
+            return 1 - exp((-1 * self.l) * k)
+
+    def to_poisson(self) -> Poisson:
+        return Poisson(1 / self.l)
