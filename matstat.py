@@ -38,6 +38,8 @@ def even_distribution(size: int) -> StochVar:
 
 
 if __name__ == "__main__":
-    ffg = distributions.ExponentialDistribution(0.05)
-    ffg.plot(120, 1)
+    ffg = distributions.ExponentialDistribution(0.5)
+    ffg.plot(10, 1)
+
+    ffg.to_poisson().plot(10)
 
