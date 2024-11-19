@@ -38,7 +38,7 @@ def even_distribution(size: int) -> StochVar:
 
 
 if __name__ == "__main__":
-    ffg = distributions.NormalDistribution(0, 1)
-    ffg.plot()
+    ffg = distributions.GammaDistribution(1, 2)
+    ffg.plot(3, sample_rate=10)
 
 

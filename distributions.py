@@ -5,6 +5,7 @@ from math import factorial, exp, sqrt
 from statistics import NormalDist
 from typing import Protocol
 import matplotlib.pyplot as plt
+from scipy.stats import gamma
 
 
 
@@ -240,3 +241,53 @@ class NormalDistribution(ContinuousDistribution):
 
     def variance(self) -> float:
         return self.sigma ** 2
+
+
+class WeibullDistribution(ContinuousDistribution):
+    """Weibull distribution
+
+    l, c positive
+    """
+
+    def __init__(self, l: float, c: float) -> None:
+        super().__init__()
+        self.l = l
+        self.c = c
+
+    def pdf(self, k: float) -> float:
+        if k < 0:
+            return 0
+        else:
+            try:
+                return self.l * self.c * pow((self.l * k), (self.c - 1)) * exp((-1) * pow((self.l * k), self.c))
+            except ZeroDivisionError:
+                return 0
+
+    def cdf(self, k: float) -> float:
+        if k < 0:
+            return 0
+        else:
+            return 1 - exp((-1) * pow(self.l * k, self.c))
+
+    @staticmethod
+    def rayleigh(l: float) -> WeibullDistribution:
+        return WeibullDistribution(l, 1)
+
+
+class GammaDistribution(ContinuousDistribution):
+    """Gamma distribution"""
+
+    def __init__(self, l: float, c: float) -> None:
+        super().__init__()
+
+        if c <= 0 or l <= 0:
+            raise ValueError("c and l must be positive")
+
+        self.l = l
+        self.c = c
+
+    def pdf(self, k: float) -> float:
+        return gamma.pdf(k, a=self.c, scale=self.l)
+
+    def cdf(self, k: float) -> float:
+        return gamma.cdf(k)
