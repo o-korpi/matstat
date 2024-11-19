@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from math import factorial, exp
+import math
+from math import factorial, exp, sqrt
+from statistics import NormalDist
 from typing import Protocol
 import matplotlib.pyplot as plt
 
@@ -29,7 +31,7 @@ class ContinuousDistribution(Protocol):
     def plot(self, n: int = 25, sample_rate: int = 5) -> None:
         x_axis = range(0, n * sample_rate)
         data = [self.pdf(k / sample_rate) for k in x_axis]
-        plt.plot(x_axis, data)
+        plt.plot([x / sample_rate for x in x_axis], data)
         plt.show()
 
 
@@ -201,3 +203,40 @@ class ExponentialDistribution(ContinuousDistribution):
 
     def to_poisson(self) -> Poisson:
         return Poisson(1 / self.l)
+
+
+class NormalDistribution(ContinuousDistribution):
+    """Normal distribution
+
+    """
+
+    def __init__(self, mu: float, sigma: float) -> None:
+        super().__init__()
+        self.mu = mu
+        self.sigma = sigma
+
+    def pdf(self, k: float) -> float:
+        return (1 / sqrt(2 * math.pi * self.sigma ** 2)) * exp(-1 * ((k - self.mu) ** 2 / (2 * self.sigma ** 2)))
+
+    def cdf(self, k: float) -> float:
+        return NormalDist(mu=self.mu, sigma=self.sigma).cdf(k)
+
+    def z(self, x: float) -> float:
+        return (x - self.mu) / self.sigma
+
+    @staticmethod
+    def standard_normal_distribution() -> NormalDistribution:
+        """Create a standard normal distribution"""
+        return NormalDistribution(0, 1)
+
+    def plot(self, n: int = 3, sample_rate: int = 15) -> None:
+        x_axis = range(-n * sample_rate, n * sample_rate)
+        data = [self.pdf(k / sample_rate) for k in x_axis]
+        plt.plot([x / sample_rate for x in x_axis], data)
+        plt.show()
+
+    def expected_value(self) -> float:
+        return self.mu
+
+    def variance(self) -> float:
+        return self.sigma ** 2
