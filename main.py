@@ -8,6 +8,7 @@ if __name__ == '__main__':
 
     distribution = args[0]
 
+    # todo: use cli lib
     match distribution:
         case "poisson":
             try:
