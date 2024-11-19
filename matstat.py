@@ -38,6 +38,6 @@ def even_distribution(size: int) -> StochVar:
 
 
 if __name__ == "__main__":
-    ffg = distributions.Poisson(1)
-    ffg.plot(50)
+    ffg = distributions.Hypergeometric(52, 13, 5)
+    ffg.plot(7)
 
